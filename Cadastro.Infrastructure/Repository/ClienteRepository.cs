@@ -5,6 +5,7 @@ using Dapper;
 using Microsoft.Data.SqlClient;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
+using System.Data;
 
 namespace Cadastro.Infrastructure.Repository
 {
@@ -37,17 +38,18 @@ namespace Cadastro.Infrastructure.Repository
         public async Task<Cliente> CreateCliente(Cliente cliente)
         {
             var connectionString = this.GetConnection();
-            var query = $"EXECUTE [dbo].[CREATENewCliente] = [dbo].[CREATENewCliente]  @Nome = {cliente.Nome}," +
-                $"@Email={cliente.Email}," +
-                $"@Logotiponame={null}" +
-                $",@Logo={null}" +
-                $"GO";
+            var parameters = new DynamicParameters();
+            parameters.Add("@Nome", cliente.Nome);
+            parameters.Add("@Email", cliente.Email);
+            parameters.Add("@Logotiponame", cliente.LogotipoName);
+            parameters.Add("@Logo", cliente.Logo);
+            
             using (var connection = new SqlConnection(connectionString))
             {
                 try
                 {
                     connection.Open();
-                    var queryExecute = await connection.ExecuteAsync(query);
+                    var results = await connection.QueryAsync<Cliente>("dbo.CREATENewCliente", parameters, commandType: CommandType.StoredProcedure);
 
                 }
                 catch (Exception)
@@ -65,15 +67,15 @@ namespace Cadastro.Infrastructure.Repository
         public async Task<Cliente> DeleteCliente(Cliente cliente)
         {
             var connectionString = this.GetConnection();
-            var query = $"EXECUTE [dbo].[DeleteCliente] " +
-                $"@Id = {cliente.Id}"+
-                $"GO";
+            var parameters = new DynamicParameters();
+            parameters.Add("@Id", cliente.Id);
+            
             using (var connection = new SqlConnection(connectionString))
             {
                 try
                 {
                     connection.Open();
-                    var queryExecute = await connection.ExecuteAsync(query);
+                    var results = await connection.QueryAsync<Cliente>("dbo.DeleteCliente", parameters, commandType: CommandType.StoredProcedure);
 
                 }
                 catch (Exception)
@@ -92,19 +94,19 @@ namespace Cadastro.Infrastructure.Repository
         public async Task<Cliente> UpdateCliente(Cliente cliente)
         {
             var connectionString = this.GetConnection();
-            var query = $"EXECUTE [dbo].[UpdateCliente] " +
-                $"@Id = {cliente.Id}," +
-                $" @Nome = {cliente.Nome}, " +
-                $" @Email={cliente.Email}, " +
-                $" @Logotiponame={null} " +
-                $",@Logo={null} " +
-                $"GO";
+            var parameters = new DynamicParameters();
+            parameters.Add("@Id", cliente.Id);
+            parameters.Add("@Nome", cliente.Nome);
+            parameters.Add("@Emai", cliente.Email);
+            parameters.Add("@Logotiponame", null);
+            parameters.Add("@Logo", null);
+
             using (var connection = new SqlConnection(connectionString))
             {
                 try
                 {
                     connection.Open();
-                    var queryExecute = await connection.ExecuteAsync(query);
+                    var results = await connection.QueryAsync<Cliente>("dbo.DeleteCliente", parameters, commandType: CommandType.StoredProcedure);
 
                 }
                 catch (Exception)

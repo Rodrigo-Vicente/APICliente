@@ -23,7 +23,7 @@ namespace Cadastro.Application.Services
 
         public async Task<IEnumerable<LogradouroDTO>> GetLogradouroByCliente(int id)
         {
-            var logradouro = await _logradouroRepository.GetLogradouro(id);
+            var logradouro = await _logradouroRepository.GetLogradouroByCliente(id);
             return _mapper.Map<IEnumerable<LogradouroDTO>>(logradouro);
         }
         public async Task CreateLogradouro(LogradouroDTO logradouroDTO)

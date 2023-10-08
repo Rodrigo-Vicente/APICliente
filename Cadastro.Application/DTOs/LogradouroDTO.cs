@@ -7,6 +7,8 @@ namespace Cadastro.Application.DTOs
         public int Id { get; set; }
         [Required(ErrorMessage = "O Endereco é obrigatório")]
         public string? Endereco { get; set; }
+        [Required(ErrorMessage = "O Bairro é obrigatório")]
+        public string? Bairro { get; set; }
         [Required(ErrorMessage = "O Numero é obrigatório")]
         public string? Numero { get; set; }
         [Required(ErrorMessage = "O Cidade é obrigatório")]

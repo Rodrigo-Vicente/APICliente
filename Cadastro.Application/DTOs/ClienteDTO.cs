@@ -7,7 +7,7 @@ namespace Cadastro.Application.DTOs
         public int ID { get; set; }
         [Required(ErrorMessage = "O nome é obrigatório")]
         [MinLength(3)]
-        public string? Name { get; set; }
+        public string? Nome { get; set; }
 
         [Required(ErrorMessage = "O Email é obrigatório")]
         public string? Email { get; set; }

@@ -52,11 +52,16 @@ namespace Cliente.API.Controllers
             {
                 return BadRequest(ModelState);
             }
+            var existeEmail = ClienteUnicoEmail(clienteDTO);
+            if (existeEmail)
+            {
+                await _clienteService.CreateCliente(clienteDTO);
 
-            await _clienteService.CreateCliente(clienteDTO);
+                return new CreatedAtRouteResult("GetCliente",
+                        new { id = clienteDTO.ID }, clienteDTO);
+            }
 
-            return new CreatedAtRouteResult("GetCliente",
-                    new { id = clienteDTO.ID }, clienteDTO);
+           return BadRequest("E-mail já está sendo utilizado");
         }
 
         [HttpPut("{id}")]
@@ -79,6 +84,17 @@ namespace Cliente.API.Controllers
             }
             await _clienteService.DeleteCliente(id);
             return Ok(clienteExite);
+        }
+
+
+        private bool ClienteUnicoEmail(ClienteDTO clienteDTO)
+        {
+            var cliente = _clienteService.GetAll().Result;
+            if (cliente.ToList().Select(x => x.Email).Contains(clienteDTO.Email))
+            {
+                return false;
+            }
+            return true;
         }
     }
 }

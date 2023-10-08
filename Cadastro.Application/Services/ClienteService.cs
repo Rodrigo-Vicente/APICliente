@@ -3,6 +3,7 @@ using Cadastro.Application.DTOs;
 using Cadastro.Application.Interfaces;
 using Cadastro.Domain.Entity;
 using Cadastro.Domain.Interface;
+using System.Linq;
 
 namespace Cadastro.Application.Services
 {
@@ -28,6 +29,7 @@ namespace Cadastro.Application.Services
         }
         public async Task CreateCliente(ClienteDTO clienteDTO)
         {
+
             var cliente = _mapper.Map<Cliente>(clienteDTO);
             await _clienteRepository.CreateCliente(cliente);
         }

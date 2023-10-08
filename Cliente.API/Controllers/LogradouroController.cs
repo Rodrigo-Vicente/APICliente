@@ -1,9 +1,11 @@
 ﻿using Cadastro.Application.DTOs;
 using Cadastro.Application.Interfaces;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 
 namespace Cliente.API.Controllers
 {
+    [Authorize]
     [ApiController]
     [Route("api/v1/[Controller]")]
     public class LogradouroController : ControllerBase
@@ -29,7 +31,7 @@ namespace Cliente.API.Controllers
             return Ok(logradouro);
         }
 
-        [HttpPost("{clienteId}")]
+        [HttpPost]
         public async Task<ActionResult> Post([FromBody] LogradouroDTO logradouroDTO)
         {
             var ClienteExiste = await _clienteService.GetById(logradouroDTO.ClienteId);
