@@ -1,4 +1,6 @@
-BackEnd feito em clean architecture 
+Resumo da API:
+
+A API foi construida em base da clean architecture e usando o JWT para criar a autenticação do usuario logado.
 
 Alguns passos que presisam ser feitos:
 
@@ -15,4 +17,4 @@ Migration:
 1- Para iniciar o migration usar o comando add-migration 'Exemplo' -Context AppIdentityContext.
 2- update-database.
 
-3- O arquivo StoredProcedure.txt contém todas as stored criadas após criar a base de dados com o comando update-database, acesse o banco e execute as linhas para cria as storeds
+3- Os arquivos StoredProcedureLogradouro.md e StoredProceduresClientes.md contém todas as stored criadas para as operações de criar, deletar, atualizar e ler(Apenas o logradouro), após criar a base de dados com o comando update-database, acesse o banco e execute as linhas para cria as storeds.
