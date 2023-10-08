@@ -1,17 +1,27 @@
 ﻿using Cadastro.Domain.Entity;
 using Cadastro.Domain.Interface;
 using Cadastro.Infrastructure.Context;
+using Dapper;
+using Microsoft.Data.SqlClient;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.Extensions.Configuration;
 
 namespace Cadastro.Infrastructure.Repository
 {
     public class ClienteRepository : IClienteRepository
     {
         private AppIdentityContext _appIdentityContext;
+        private IConfiguration _configuration;
 
-        public ClienteRepository(AppIdentityContext context)
+        public ClienteRepository(AppIdentityContext context, IConfiguration configuration)
         {
             _appIdentityContext = context;
+            _configuration = configuration;
+        }
+        public string GetConnection()
+        {
+            var conection = _configuration.GetConnectionString("DefaultConnection");
+            return conection;
         }
 
         public async Task<IEnumerable<Cliente>> GetAll()
@@ -26,22 +36,86 @@ namespace Cadastro.Infrastructure.Repository
         }
         public async Task<Cliente> CreateCliente(Cliente cliente)
         {
-            _appIdentityContext.Add(cliente);
-            await _appIdentityContext.SaveChangesAsync();
+            var connectionString = this.GetConnection();
+            var query = $"EXECUTE [dbo].[CREATENewCliente] = [dbo].[CREATENewCliente]  @Nome = {cliente.Nome}," +
+                $"@Email={cliente.Email}," +
+                $"@Logotiponame={null}" +
+                $",@Logo={null}" +
+                $"GO";
+            using (var connection = new SqlConnection(connectionString))
+            {
+                try
+                {
+                    connection.Open();
+                    var queryExecute = await connection.ExecuteAsync(query);
+
+                }
+                catch (Exception)
+                {
+                    throw;
+                }
+                finally
+                {
+                    connection.Close();
+                }
+            }
             return cliente;
         }
 
         public async Task<Cliente> DeleteCliente(Cliente cliente)
         {
-            _appIdentityContext.Remove(cliente);
-            await _appIdentityContext.SaveChangesAsync();
+            var connectionString = this.GetConnection();
+            var query = $"EXECUTE [dbo].[DeleteCliente] " +
+                $"@Id = {cliente.Id}"+
+                $"GO";
+            using (var connection = new SqlConnection(connectionString))
+            {
+                try
+                {
+                    connection.Open();
+                    var queryExecute = await connection.ExecuteAsync(query);
+
+                }
+                catch (Exception)
+                {
+                    throw;
+                }
+                finally
+                {
+                    connection.Close();
+                }
+            }
+
             return cliente;
         }
 
         public async Task<Cliente> UpdateCliente(Cliente cliente)
         {
-            _appIdentityContext.Update(cliente);
-            await _appIdentityContext.SaveChangesAsync();
+            var connectionString = this.GetConnection();
+            var query = $"EXECUTE [dbo].[UpdateCliente] " +
+                $"@Id = {cliente.Id}," +
+                $" @Nome = {cliente.Nome}, " +
+                $" @Email={cliente.Email}, " +
+                $" @Logotiponame={null} " +
+                $",@Logo={null} " +
+                $"GO";
+            using (var connection = new SqlConnection(connectionString))
+            {
+                try
+                {
+                    connection.Open();
+                    var queryExecute = await connection.ExecuteAsync(query);
+
+                }
+                catch (Exception)
+                {
+                    throw;
+                }
+                finally
+                {
+                    connection.Close();
+                }
+            }
             return cliente;
         }
     }
